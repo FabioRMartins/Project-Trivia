@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-/* import PropTypes from 'prop-types'; */
+import PropTypes from 'prop-types';
 import { actionAddEmail, actionAddName } from '../redux/actions';
 
 class Login extends React.Component {
@@ -36,8 +36,14 @@ class Login extends React.Component {
     }
   }
 
-  handleClick = (event) => {
+  handleClick = async (event) => {
     event.preventDefault();
+    const { history } = this.props;
+    const endpoint = await fetch('https://opentdb.com/api_token.php?command=request');
+    const data = await endpoint.json();
+    console.log(data);
+    localStorage.setItem('token', data.token);
+    history.push('/jogo');
   }
 
   render() {
@@ -62,7 +68,7 @@ class Login extends React.Component {
             placeholder="insira seu email"
           />
           <button
-            type="submit"
+            type="button"
             data-testid="btn-play"
             disabled={ btnDisabled }
             onClick={ this.handleClick }
@@ -74,6 +80,12 @@ class Login extends React.Component {
     );
   }
 }
+
+Login.propTypes = {
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
+};
 
 const mapDispatchToProps = (dispatch) => ({
   setEmail: (email) => dispatch(actionAddEmail(email)),
