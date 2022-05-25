@@ -33,8 +33,10 @@ export function actionGetQuestionGame(question) {
 
 export const fetchGetQuestion = async () => {
   try {
-    const token = localStorage.getItem('token')
-    const request = await fetch(`https://opentdb.com/api.php?amount=5&token=${token}`);
+    const token = localStorage.getItem('token');
+    const request = await fetch(
+      `https://opentdb.com/api.php?amount=5&token=${token}`,
+    );
     const response = await request.json();
     console.log(response);
     return response;
@@ -43,10 +45,11 @@ export const fetchGetQuestion = async () => {
   }
 };
 
-
 export const fetchGetRequest = async () => {
   try {
-    const request = await fetch('https://opentdb.com/api_token.php?command=request');
+    const request = await fetch(
+      'https://opentdb.com/api_token.php?command=request',
+    );
     const response = await request.json();
     const { token } = response;
     localStorage.setItem('token', token);

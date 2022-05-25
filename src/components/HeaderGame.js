@@ -7,7 +7,7 @@ import { connect } from 'react-redux';
 
 class HeaderGame extends React.Component {
   render() {
-    const { player: {name, emailGravatar, score } } = this.props;
+    const { player: { name, emailGravatar, score } } = this.props;
     return (
       <header>
         <img
