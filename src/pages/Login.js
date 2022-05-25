@@ -38,12 +38,14 @@ class Login extends React.Component {
 
   handleClick = async (event) => {
     event.preventDefault();
-    const { history } = this.props;
+    const { history, setEmail, setName } = this.props;
     const endpoint = await fetch('https://opentdb.com/api_token.php?command=request');
     const data = await endpoint.json();
-    console.log(data);
     localStorage.setItem('token', data.token);
-    history.push('/jogo');
+    const { email, name } = this.state;
+    setEmail(email);
+    setName(name);
+    history.push('/game');
   }
 
   btnConfig = () => {
@@ -97,6 +99,8 @@ Login.propTypes = {
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,
+  setEmail: PropTypes.func.isRequired,
+  setName: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({

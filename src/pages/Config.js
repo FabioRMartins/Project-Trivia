@@ -15,19 +15,19 @@ export default class Config extends React.Component {
           <label htmlFor="select1">
             Categoria
             <select id="select1">
-              <option selected defaultValue="Todas">Todas</option>
+              <option defaultValue="Todas">Todas</option>
             </select>
           </label>
           <label htmlFor="select2">
             Dificuldade
             <select id="select2">
-              <option selected defaultValue="Normal">Normal</option>
+              <option defaultValue="Normal">Normal</option>
             </select>
           </label>
           <label htmlFor="select3">
             Tipo
             <select id="select3">
-              <option selected defaultValue="Todos">Todos</option>
+              <option defaultValue="Todos">Todos</option>
             </select>
           </label>
           <button
