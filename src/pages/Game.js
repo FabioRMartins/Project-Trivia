@@ -1,8 +1,7 @@
 import React from 'react';
 // import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-
-// import HeaderGame from '../components/HeaderGame';
+import HeaderGame from '../components/HeaderGame';
 import { fetchGetRequest, fetchGetQuestion } from '../redux/actions';
 
 class Game extends React.Component {
@@ -29,6 +28,7 @@ class Game extends React.Component {
   render() {
     return (
       <div>
+        <HeaderGame />
         <form>
           <p data-testid="question-category">teste</p>
           <p data-testid="question-text">teste</p>

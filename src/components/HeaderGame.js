@@ -7,15 +7,15 @@ import { connect } from 'react-redux';
 
 class HeaderGame extends React.Component {
   render() {
-    const { player: { name, emailGravatar, score } } = this.props;
+    const { player: { name, email, score } } = this.props;
     return (
       <header>
         <img
-          src={ `https://www.gravatar.com/avatar/${md5(emailGravatar).toString()}` }
+          src={ `https://www.gravatar.com/avatar/${md5(email).toString()}` }
           data-testid="header-profile-picture"
           alt="foto do usuário"
         />
-        <span>  </span>
+
         <span data-testid="header-player-name">{`Player Name: ${name}`}</span>
         <span>  </span>
         <span data-testid="header-score">{`Player's score: ${score}`}</span>
@@ -33,4 +33,4 @@ const mapStateToProps = (state) => ({
   player: state.player,
 });
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps)(HeaderGame);
