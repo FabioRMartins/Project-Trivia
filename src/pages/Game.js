@@ -6,14 +6,14 @@ import PropTypes from 'prop-types';
 import { fetchGetRequest, fetchGetQuestion } from '../redux/actions';
 
 class Game extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      question: [''],
-      answers: [''],
-      qNumber: 0,
-    };
-  }
+  // constructor() {
+  //   super();
+  //   this.state = {
+  //     question: [''],
+  //     answers: [''],
+  //     qNumber: 0,
+  //   };
+  // }
 
   componentDidMount() {
     const { history } = this.props;
@@ -24,7 +24,6 @@ class Game extends React.Component {
       localStorage.removeItem('token');
       history.push('/');
     }
-
   }
 
   render() {
