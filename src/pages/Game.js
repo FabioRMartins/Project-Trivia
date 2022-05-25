@@ -66,6 +66,12 @@ class Game extends React.Component {
     }
   }
 
+  clickToHome = (event) => {
+    event.preventDefault();
+    const { history } = this.props;
+    history.push('/');
+  }
+
   renderQuestions = () => {
     const { questions, currentQuestionIndex, questionButtonDisabled } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
@@ -128,11 +134,27 @@ class Game extends React.Component {
               type="submit"
               onClick={ this.nextQuestion }
               disabled={ nxtButtonDisabled }
+              data-testid="btn-next"
             >
               Proximo
             </button>
           }
         </div>
+        <button
+          type="submit"
+          data-testid="btn-ranking"
+          onClick={ this.viewRanking }
+        >
+          Ver Ranking
+        </button>
+
+        <button
+          type="button"
+          onClick={ this.clickToHome }
+          data-testid="btn-go-home"
+        >
+          Inicio
+        </button>
       </main>
     );
   }
