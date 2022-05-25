@@ -9,7 +9,6 @@ class Game extends React.Component {
     super();
     this.state = {
       questions: {},
-      shuffledAnswers: [],
       currentQuestionIndex: 0,
       nxtButtonDisabled: true,
       questionButtonDisabled: false,
@@ -18,20 +17,6 @@ class Game extends React.Component {
 
   componentDidMount() {
     this.fetchGetQuestion();
-  }
-
-  shuffledAnswers = () => {
-    const { questions, currentQuestionIndex, questionButtonDisabled } = this.state;
-    const currentQuestion = questions[currentQuestionIndex];
-    const NUMBER = 0.5;
-    const allAnswers = [
-      ...currentQuestion.incorrect_answers,
-      currentQuestion.correct_answer,
-    ];
-    const shuffledAnswers = allAnswers.sort(() => Math.random() - NUMBER);
-    this.setState({
-      shuffledAnswers,
-    });
   }
 
   fetchGetQuestion = async () => {
@@ -47,7 +32,6 @@ class Game extends React.Component {
     this.setState({
       questions,
     });
-    this.shuffledAnswers();
   }
 
   checkAnswer = (e) => {
