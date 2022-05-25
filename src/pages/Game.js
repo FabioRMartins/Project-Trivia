@@ -72,6 +72,12 @@ class Game extends React.Component {
     history.push('/');
   }
 
+  viewRanking = (e) => {
+    e.preventDefault();
+    const { history } = this.props;
+    history.push('/ranking');
+  }
+
   renderQuestions = () => {
     const { questions, currentQuestionIndex, questionButtonDisabled } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
