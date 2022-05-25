@@ -40,8 +40,6 @@ export const fetchGetQuestion = async () => {
     const response = await request.json();
     return response;
   } catch (error) {
-    return response;
-  } catch (error) {
     return error;
   }
 };
