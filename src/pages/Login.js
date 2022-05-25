@@ -104,8 +104,4 @@ const mapDispatchToProps = (dispatch) => ({
   setName: (name) => dispatch(actionAddName(name)),
 });
 
-Login.propTypes = {
-  history: propTypes.shape,
-}.isRequired;
-
 export default connect(null, mapDispatchToProps)(Login);

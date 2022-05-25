@@ -1,5 +1,5 @@
 import React from 'react';
-import propTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 export default class Config extends React.Component {
   handleClick = () => {
@@ -43,5 +43,5 @@ export default class Config extends React.Component {
 }
 
 Config.propTypes = {
-  history: propTypes.shape,
+  history: PropTypes.shape,
 }.isRequired;
