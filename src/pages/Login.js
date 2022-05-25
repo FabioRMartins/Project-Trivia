@@ -43,7 +43,7 @@ class Login extends React.Component {
     const data = await endpoint.json();
     console.log(data);
     localStorage.setItem('token', data.token);
-    history.push('/jogo');
+    history.push('/game');
   }
 
   btnConfig = () => {
@@ -103,9 +103,5 @@ const mapDispatchToProps = (dispatch) => ({
   setEmail: (email) => dispatch(actionAddEmail(email)),
   setName: (name) => dispatch(actionAddName(name)),
 });
-
-Login.propTypes = {
-  history: propTypes.shape,
-}.isRequired;
 
 export default connect(null, mapDispatchToProps)(Login);

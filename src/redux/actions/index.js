@@ -38,10 +38,10 @@ export const fetchGetQuestion = async () => {
       `https://opentdb.com/api.php?amount=5&token=${token}`,
     );
     const response = await request.json();
-    console.log(response);
+    // console.log(response);
     return response;
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };
 
@@ -53,9 +53,9 @@ export const fetchGetRequest = async () => {
     const response = await request.json();
     const { token } = response;
     localStorage.setItem('token', token);
-    console.log('token', token);
-    console.log(response);
+    // console.log('token', token);
+    // console.log(response);
   } catch (error) {
-    console.log(error);
+    // console.log(error);
   }
 };

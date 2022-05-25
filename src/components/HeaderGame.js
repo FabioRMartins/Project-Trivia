@@ -33,4 +33,4 @@ const mapStateToProps = (state) => ({
   player: state.player,
 });
 
-export default connect(mapStateToProps)(Header);
+export default connect(mapStateToProps)(HeaderGame);
