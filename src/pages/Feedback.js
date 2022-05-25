@@ -28,6 +28,7 @@ class Feedback extends Component {
         </section>
       );
     }
+
     return (
       <section>
         <h1 data-testid="feedback-text">Well Done!</h1>
