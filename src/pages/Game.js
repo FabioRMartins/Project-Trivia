@@ -9,9 +9,12 @@ class Game extends React.Component {
     super();
     this.state = {
       questions: {},
+      shuffledAnswers: [],
       currentQuestionIndex: 0,
       nxtButtonDisabled: true,
       questionButtonDisabled: false,
+      correctStyle: {},
+      wrongStyle: {},
     };
   }
 
@@ -29,8 +32,18 @@ class Game extends React.Component {
       history.push('/');
     }
     const questions = getQuestion.results;
+    const currentQuestionIndex = 0;
+    const currentQuestion = questions[currentQuestionIndex];
+    const NUMBER = 0.5;
+    const allAnswers = [
+      ...currentQuestion.incorrect_answers,
+      currentQuestion.correct_answer,
+    ];
+    const shuffledAnswers = allAnswers.sort(() => Math.random() - NUMBER);
+    console.log(shuffledAnswers);
     this.setState({
       questions,
+      shuffledAnswers,
     });
   }
 
@@ -40,29 +53,45 @@ class Game extends React.Component {
     const { questions, currentQuestionIndex } = this.state;
     const correctAnswer = questions[currentQuestionIndex].correct_answer;
     if (target.value === correctAnswer) {
+      // Aqui entra a logica de somar pontos corretos
       console.log('acertou');
-    } else {
-      console.log('errou');
     }
     this.setState({
       nxtButtonDisabled: false,
       questionButtonDisabled: true,
+      correctStyle: { border: '3px solid rgb(6, 240, 15' },
+      wrongStyle: { border: '3px solid red' },
+    });
+  }
+
+  shuffledAnswers = () => {
+    const { questions, currentQuestionIndex } = this.state;
+    const currentQuestion = questions[currentQuestionIndex];
+    const NUMBER = 0.5;
+    const allAnswers = [
+      ...currentQuestion.incorrect_answers,
+      currentQuestion.correct_answer,
+    ];
+    const shuffledAnswers = allAnswers.sort(() => Math.random() - NUMBER);
+    this.setState({
+      shuffledAnswers,
     });
   }
 
   nextQuestion = (e) => {
     e.preventDefault();
     const { questions, currentQuestionIndex } = this.state;
+    const { history } = this.props;
     if (currentQuestionIndex < questions.length - 1) {
       this.setState({
         currentQuestionIndex: currentQuestionIndex + 1,
         nxtButtonDisabled: true,
         questionButtonDisabled: false,
-      });
+        correctStyle: {},
+        wrongStyle: {},
+      }, () => this.shuffledAnswers());
     } else {
-      this.setState({
-        nxtButtonDisabled: false,
-      });
+      history.push('/feedback');
     }
   }
 
@@ -79,15 +108,16 @@ class Game extends React.Component {
   }
 
   renderQuestions = () => {
-    const { questions, currentQuestionIndex, questionButtonDisabled } = this.state;
+    const {
+      questions,
+      currentQuestionIndex,
+      questionButtonDisabled,
+      correctStyle,
+      wrongStyle,
+      shuffledAnswers,
+    } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
-    const NUMBER = 0.5;
-    const allAnswers = [
-      ...currentQuestion.incorrect_answers,
-      currentQuestion.correct_answer,
-    ];
-    const shuffledAnswers = allAnswers.sort(() => Math.random() - NUMBER);
-    const correctAnswer = questions[currentQuestionIndex].correct_answer;
+    const correctAnswer = currentQuestion.correct_answer;
     return (
       <div>
         <p data-testid="question-category">{currentQuestion.category}</p>
@@ -104,6 +134,7 @@ class Game extends React.Component {
                     data-testid={ `wrong-answer-${index}` }
                     onClick={ this.checkAnswer }
                     disabled={ questionButtonDisabled }
+                    style={ wrongStyle }
                   >
                     {answer}
                   </button>
@@ -115,6 +146,7 @@ class Game extends React.Component {
                     data-testid="correct-answer"
                     onClick={ this.checkAnswer }
                     disabled={ questionButtonDisabled }
+                    style={ correctStyle }
                   >
                     {answer}
                   </button>
