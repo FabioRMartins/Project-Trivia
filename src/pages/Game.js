@@ -113,6 +113,12 @@ class Game extends React.Component {
     }
   }
 
+  clickToHome = (event) => {
+    event.preventDefault();
+    const { history } = this.props;
+    history.push('/');
+  }
+
   tick() {
     // const current = this.state.countdown;
     const { countdown } = this.state;
@@ -133,11 +139,6 @@ class Game extends React.Component {
       correctStyle: { border: '3px solid rgb(6, 240, 15' },
       wrongStyle: { border: '3px solid red' },
     });
-
-  clickToHome = (event) => {
-    event.preventDefault();
-    const { history } = this.props;
-    history.push('/');
   }
 
   renderQuestions = () => {
