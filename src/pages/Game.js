@@ -63,6 +63,7 @@ class Game extends React.Component {
     const { questions, currentQuestionIndex, countdown } = this.state;
     const stopCountdown = countdown;
     const correctAnswer = questions[currentQuestionIndex].correct_answer;
+    console.log(questions[currentQuestionIndex].difficulty);
     if (target.value === correctAnswer) {
       // Aqui entra a logica de somar pontos corretos
       console.log('acertou');
@@ -111,12 +112,6 @@ class Game extends React.Component {
     } else {
       history.push('/feedback');
     }
-  }
-
-  clickToHome = (event) => {
-    event.preventDefault();
-    const { history } = this.props;
-    history.push('/');
   }
 
   tick() {
@@ -215,21 +210,6 @@ class Game extends React.Component {
         {
           timer ? <span>{countdown}</span> : <span>{stopCountdown}</span>
         }
-        <button
-          type="submit"
-          data-testid="btn-ranking"
-          onClick={ this.viewRanking }
-        >
-          Ver Ranking
-        </button>
-
-        <button
-          type="button"
-          onClick={ this.clickToHome }
-          data-testid="btn-go-home"
-        >
-          Inicio
-        </button>
       </main>
     );
   }
