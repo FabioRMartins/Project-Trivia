@@ -1,8 +1,9 @@
 import React from 'react';
-// import { connect } from 'react-redux';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import HeaderGame from '../components/HeaderGame';
-import { fetchGetRequest, fetchGetQuestion } from '../redux/actions';
+import { fetchGetRequest, fetchGetQuestion, actionAddScore,
+  actionAddAssertions } from '../redux/actions';
 
 class Game extends React.Component {
   constructor() {
@@ -15,6 +16,9 @@ class Game extends React.Component {
       questionButtonDisabled: false,
       correctStyle: {},
       wrongStyle: {},
+      nextBtn: false,
+      score: 0,
+      assertions: 0,
       countdown: 30,
       stopCountdown: 0,
       timer: true,
@@ -49,7 +53,6 @@ class Game extends React.Component {
       currentQuestion.correct_answer,
     ];
     const shuffledAnswers = allAnswers.sort(() => Math.random() - NUMBER);
-    console.log(shuffledAnswers);
     this.setState({
       questions,
       shuffledAnswers,
@@ -63,12 +66,12 @@ class Game extends React.Component {
     const { questions, currentQuestionIndex, countdown } = this.state;
     const stopCountdown = countdown;
     const correctAnswer = questions[currentQuestionIndex].correct_answer;
-    console.log(questions[currentQuestionIndex].difficulty);
+    const dificult = questions[currentQuestionIndex].difficulty;
     if (target.value === correctAnswer) {
-      // Aqui entra a logica de somar pontos corretos
-      console.log('acertou');
+      this.handleScore(1, dificult);
     }
     this.setState({
+      nextBtn: true,
       nxtButtonDisabled: false,
       questionButtonDisabled: true,
       correctStyle: { border: '3px solid rgb(6, 240, 15' },
@@ -77,6 +80,30 @@ class Game extends React.Component {
       countdown: 0,
       timer: false,
     });
+  }
+
+  handleScore = () => {
+    const magicNumber10 = 10;
+    const { score, questions, currentQuestionIndex, assertions } = this.state;
+    const difficulty = this.handleDifficult(questions[currentQuestionIndex].difficulty);
+    this.setState({
+      score: score + (magicNumber10 + (1 * difficulty)),
+      assertions: assertions + 1,
+    }, () => this.handleUserScore());
+  }
+
+  handleUserScore = () => {
+    const { score, assertions } = this.state;
+    const { setScore, setAssertions } = this.props;
+    setScore(score);
+    setAssertions(assertions);
+  }
+
+  handleDifficult = (difficult) => {
+    const magicNumber3 = 3;
+    if (difficult === 'easy') return 1;
+    if (difficult === 'medium') return 2;
+    if (difficult === 'hard') return magicNumber3;
   }
 
   shuffledAnswers = () => {
@@ -115,9 +142,7 @@ class Game extends React.Component {
   }
 
   tick() {
-    // const current = this.state.countdown;
     const { countdown } = this.state;
-    // const current = countdown;
     if (countdown === 0) {
       this.transition();
     } else {
@@ -127,7 +152,6 @@ class Game extends React.Component {
 
   transition() {
     clearInterval(this.timer);
-    // do something else here, presumably.
     this.setState({
       nxtButtonDisabled: false,
       questionButtonDisabled: true,
@@ -137,13 +161,8 @@ class Game extends React.Component {
   }
 
   renderQuestions = () => {
-    const {
-      questions,
-      currentQuestionIndex,
-      questionButtonDisabled,
-      correctStyle,
-      wrongStyle,
-      shuffledAnswers,
+    const { questions, currentQuestionIndex, questionButtonDisabled, correctStyle,
+      wrongStyle, shuffledAnswers,
     } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
     const correctAnswer = currentQuestion.correct_answer;
@@ -187,36 +206,44 @@ class Game extends React.Component {
     );
   }
 
+  renderButton = () => {
+    const { nxtButtonDisabled } = this.state;
+    return (
+      <div>
+        <button
+          type="submit"
+          onClick={ this.nextQuestion }
+          disabled={ nxtButtonDisabled }
+          data-testid="btn-next"
+        >
+          Next
+        </button>
+      </div>
+    );
+  }
+
   render() {
-    const { questions, nxtButtonDisabled, timer, countdown, stopCountdown } = this.state;
+    const { questions, timer, countdown, stopCountdown, nextBtn } = this.state;
     return (
       <main>
         <HeaderGame />
         <div>
-          {
-            questions.length > 0 ? this.renderQuestions() : <p>Carregando</p>
-          }
-          {
-            <button
-              type="submit"
-              onClick={ this.nextQuestion }
-              disabled={ nxtButtonDisabled }
-              data-testid="btn-next"
-            >
-              Proximo
-            </button>
-          }
+          { questions.length > 0 ? this.renderQuestions() : <p>Carregando</p> }
+          { !nextBtn ? null : (
+            this.renderButton())}
         </div>
-        {
-          timer ? <span>{countdown}</span> : <span>{stopCountdown}</span>
-        }
+        { timer ? <span>{countdown}</span> : <span>{stopCountdown}</span> }
       </main>
     );
   }
 }
-
 Game.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
+  setScore: PropTypes.func.isRequired,
+  setAssertions: PropTypes.func.isRequired,
 };
-
-export default Game;
+const mapDispatchToProps = (dispatch) => ({
+  setScore: (score) => dispatch(actionAddScore(score)),
+  setAssertions: (assertions) => dispatch(actionAddAssertions(assertions)),
+});
+export default connect(null, mapDispatchToProps)(Game);
