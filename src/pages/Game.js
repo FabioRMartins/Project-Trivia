@@ -133,6 +133,11 @@ class Game extends React.Component {
       correctStyle: { border: '3px solid rgb(6, 240, 15' },
       wrongStyle: { border: '3px solid red' },
     });
+
+  clickToHome = (event) => {
+    event.preventDefault();
+    const { history } = this.props;
+    history.push('/');
   }
 
   renderQuestions = () => {
@@ -209,6 +214,21 @@ class Game extends React.Component {
         {
           timer ? <span>{countdown}</span> : <span>{stopCountdown}</span>
         }
+        <button
+          type="submit"
+          data-testid="btn-ranking"
+          onClick={ this.viewRanking }
+        >
+          Ver Ranking
+        </button>
+
+        <button
+          type="button"
+          onClick={ this.clickToHome }
+          data-testid="btn-go-home"
+        >
+          Inicio
+        </button>
       </main>
     );
   }
