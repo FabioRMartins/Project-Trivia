@@ -19,11 +19,20 @@ class Game extends React.Component {
       nextBtn: false,
       score: 0,
       assertions: 0,
+      countdown: 30,
+      stopCountdown: 0,
+      timer: true,
     };
+    const TIME = 1000;
+    this.timer = setInterval(this.tick.bind(this), TIME);
   }
 
   componentDidMount() {
     this.fetchGetQuestion();
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.timer);
   }
 
   fetchGetQuestion = async () => {
@@ -52,8 +61,10 @@ class Game extends React.Component {
 
   checkAnswer = (e) => {
     e.preventDefault();
+    clearInterval(this.timer);
     const { target } = e;
-    const { questions, currentQuestionIndex } = this.state;
+    const { questions, currentQuestionIndex, countdown } = this.state;
+    const stopCountdown = countdown;
     const correctAnswer = questions[currentQuestionIndex].correct_answer;
     const dificult = questions[currentQuestionIndex].difficulty;
     if (target.value === correctAnswer) {
@@ -65,6 +76,9 @@ class Game extends React.Component {
       questionButtonDisabled: true,
       correctStyle: { border: '3px solid rgb(6, 240, 15' },
       wrongStyle: { border: '3px solid red' },
+      stopCountdown,
+      countdown: 0,
+      timer: false,
     });
   }
 
@@ -108,6 +122,8 @@ class Game extends React.Component {
 
   nextQuestion = (e) => {
     e.preventDefault();
+    const TIME = 1000;
+    this.timer = setInterval(this.tick.bind(this), TIME);
     const { questions, currentQuestionIndex } = this.state;
     const { history } = this.props;
     if (currentQuestionIndex < questions.length - 1) {
@@ -117,26 +133,36 @@ class Game extends React.Component {
         questionButtonDisabled: false,
         correctStyle: {},
         wrongStyle: {},
+        countdown: 30,
+        timer: true,
       }, () => this.shuffledAnswers());
     } else {
       history.push('/feedback');
     }
   }
 
-  clickToHome = (event) => {
-    event.preventDefault();
-    const { history } = this.props;
-    history.push('/');
+  tick() {
+    const { countdown } = this.state;
+    if (countdown === 0) {
+      this.transition();
+    } else {
+      this.setState({ countdown: countdown - 1 });
+    }
+  }
+
+  transition() {
+    clearInterval(this.timer);
+    this.setState({
+      nxtButtonDisabled: false,
+      questionButtonDisabled: true,
+      correctStyle: { border: '3px solid rgb(6, 240, 15' },
+      wrongStyle: { border: '3px solid red' },
+    });
   }
 
   renderQuestions = () => {
-    const {
-      questions,
-      currentQuestionIndex,
-      questionButtonDisabled,
-      correctStyle,
-      wrongStyle,
-      shuffledAnswers,
+    const { questions, currentQuestionIndex, questionButtonDisabled, correctStyle,
+      wrongStyle, shuffledAnswers,
     } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
     const correctAnswer = currentQuestion.correct_answer;
@@ -181,9 +207,7 @@ class Game extends React.Component {
   }
 
   renderButton = () => {
-    const {
-      nxtButtonDisabled,
-    } = this.state;
+    const { nxtButtonDisabled } = this.state;
     return (
       <div>
         <button
@@ -199,9 +223,7 @@ class Game extends React.Component {
   }
 
   render() {
-    const { questions,
-      nextBtn,
-    } = this.state;
+    const { questions, timer, countdown, stopCountdown, nextBtn } = this.state;
     return (
       <main>
         <HeaderGame />
@@ -210,21 +232,7 @@ class Game extends React.Component {
           { !nextBtn ? null : (
             this.renderButton())}
         </div>
-        <button
-          type="submit"
-          data-testid="btn-ranking"
-          onClick={ this.viewRanking }
-        >
-          Ver Ranking
-        </button>
-
-        <button
-          type="button"
-          onClick={ this.clickToHome }
-          data-testid="btn-go-home"
-        >
-          Inicio
-        </button>
+        { timer ? <span>{countdown}</span> : <span>{stopCountdown}</span> }
       </main>
     );
   }
