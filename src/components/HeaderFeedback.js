@@ -18,6 +18,13 @@ class HeaderFeedback extends Component {
     this.setState({
       gravatarImg: url,
     });
+    const { name, score } = this.props;
+    const { gravatarImg } = this.state;
+    /* const newRanking = { newName, newScore, newGravatarImg };
+    this.setState(()) */
+    localStorage.setItem('name', name);
+    localStorage.setItem('score', JSON.stringify(score));
+    localStorage.setItem('gravatarimg', gravatarImg);
   }
 
   render() {

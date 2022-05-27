@@ -2,6 +2,8 @@ export const ADD_NAME = 'ADD_NAME';
 export const ADD_EMAIL = 'ADD_EMAIL';
 export const GET_QUESTION_GAME = 'GET_QUESTION_GAME';
 export const GET_REQUEST = 'GET_REQUEST';
+export const ADD_SCORE = 'ADD_SCORE';
+export const ADD_ASSERTIONS = 'ADD_ASSERTIONS';
 
 export function actionAddName(name) {
   return {
@@ -14,6 +16,20 @@ export function actionAddEmail(email) {
   return {
     type: ADD_EMAIL,
     payload: email,
+  };
+}
+
+export function actionAddScore(score) {
+  return {
+    type: ADD_SCORE,
+    payload: score,
+  };
+}
+
+export function actionAddAssertions(assertions) {
+  return {
+    type: ADD_ASSERTIONS,
+    payload: assertions,
   };
 }
 
