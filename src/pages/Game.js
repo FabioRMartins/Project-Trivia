@@ -125,10 +125,9 @@ class Game extends React.Component {
         timer: true }, () => this.shuffledAnswers());
     } else {
       const oldRank = JSON.parse(localStorage.getItem('ranking')) || [];
-      const { name, score, gravatarEmail, setScore } = this.props;
+      const { name, score, gravatarEmail } = this.props;
       const newRanking = [...oldRank, { name, score, gravatarEmail }];
       localStorage.setItem('ranking', JSON.stringify(newRanking));
-      setScore(0);
       history.push('/feedback');
     }
   }

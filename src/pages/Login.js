@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { actionAddEmail, actionAddName } from '../redux/actions';
+import { actionAddEmail, actionAddName, actionAddScore } from '../redux/actions';
 
 class Login extends React.Component {
   constructor() {
@@ -12,6 +12,11 @@ class Login extends React.Component {
       name: '',
       btnDisabled: true,
     };
+  }
+
+  componentDidMount() {
+    const { setScore } = this.props;
+    setScore(0);
   }
 
   handleChange = ({ target }) => {
@@ -101,11 +106,13 @@ Login.propTypes = {
   }).isRequired,
   setEmail: PropTypes.func.isRequired,
   setName: PropTypes.func.isRequired,
+  setScore: PropTypes.func.isRequired,
 };
 
 const mapDispatchToProps = (dispatch) => ({
   setEmail: (email) => dispatch(actionAddEmail(email)),
   setName: (name) => dispatch(actionAddName(name)),
+  setScore: (score) => dispatch(actionAddScore(score)),
 });
 
 export default connect(null, mapDispatchToProps)(Login);
