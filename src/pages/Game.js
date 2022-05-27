@@ -84,10 +84,11 @@ class Game extends React.Component {
 
   handleScore = () => {
     const magicNumber10 = 10;
-    const { score, questions, currentQuestionIndex, assertions } = this.state;
+    const { score, questions, currentQuestionIndex, assertions, stopCountdown,
+    } = this.state;
     const difficulty = this.handleDifficult(questions[currentQuestionIndex].difficulty);
     this.setState({
-      score: score + (magicNumber10 + (1 * difficulty)),
+      score: score + (magicNumber10 + (stopCountdown * difficulty)),
       assertions: assertions + 1,
     }, () => this.handleUserScore());
   }
@@ -162,8 +163,7 @@ class Game extends React.Component {
 
   renderQuestions = () => {
     const { questions, currentQuestionIndex, questionButtonDisabled, correctStyle,
-      wrongStyle, shuffledAnswers,
-    } = this.state;
+      wrongStyle, shuffledAnswers } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
     const correctAnswer = currentQuestion.correct_answer;
     return (
