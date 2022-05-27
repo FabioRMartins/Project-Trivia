@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-/* import { connect } from 'react-redux'; */
 import PropTypes from 'prop-types';
 import getRanking from '../helpers/localStorage';
 
@@ -64,12 +63,6 @@ class Ranking extends Component {
     }
 }
 
-/* const mapStateToProps = (state)({
-  name: state.player.name,
-  score: state.player.score,
-}); */
-
-/* export default connect(mapStateToProps)(Ranking); */
 Ranking.propTypes = {
   history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
 };
