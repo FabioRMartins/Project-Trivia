@@ -150,8 +150,7 @@ class Game extends React.Component {
 
   renderQuestions = () => {
     const { questions, currentQuestionIndex, questionButtonDisabled, correctStyle,
-      wrongStyle, shuffledAnswers,
-    } = this.state;
+      wrongStyle, shuffledAnswers } = this.state;
     const currentQuestion = questions[currentQuestionIndex];
     const correctAnswer = currentQuestion.correct_answer;
     return (
