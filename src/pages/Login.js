@@ -1,7 +1,55 @@
 import React from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { actionAddEmail, actionAddName, actionAddScore } from '../redux/actions';
+
+const LoginDiv = styled.div`{
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 980px;
+  background: #093545;
+}`;
+const LoginForm = styled.form`{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}`;
+const LoginH1 = styled.h1`
+{
+  font-family: 'Lexend Deca';
+  font-weight: 100;
+  font-size: 70px;
+  line-height: 400px;
+  text-align: center;
+  color: #FFFFFF;
+}`;
+const LoginInputName = styled.input`{
+  width: 300px;
+  height: 45px;
+  margin:10px;
+  border-radius:5px
+  text-align: center;padding-left:10px;
+}`;
+const LoginInputEmail = styled.input`{
+  width: 300px;
+  height: 45px;
+  margin:10px;
+  border-radius:5px
+  text-align: center; padding-left:10px;
+
+}`;
+const BtnPlay = styled.button`{
+  width: 300px;
+  height: 45px;
+  margin:25px;
+}`;
+const BtnConfig = styled.button`{
+  width: 300px;
+  height: 45px;
+  margin:25px;
+  }`;
 
 class Login extends React.Component {
   constructor() {
@@ -61,41 +109,42 @@ class Login extends React.Component {
   render() {
     const { email, name, btnDisabled } = this.state;
     return (
-      <div>
-        <form>
-          <input
+      <LoginDiv>
+        <LoginH1>Sign in</LoginH1>
+        <LoginForm>
+          <LoginInputName
             type="text"
             value={ name }
             name="name"
             data-testid="input-player-name"
             onChange={ this.handleChange }
-            placeholder="insira seu nome"
+            placeholder="Insira seu nome"
           />
-          <input
+          <LoginInputEmail
             type="email"
             value={ email }
             name="email"
             data-testid="input-gravatar-email"
             onChange={ this.handleChange }
-            placeholder="insira seu email"
+            placeholder="Insira seu email"
           />
-          <button
+          <BtnPlay
             type="button"
             data-testid="btn-play"
             disabled={ btnDisabled }
             onClick={ this.handleClick }
           >
             Play
-          </button>
-          <button
+          </BtnPlay>
+          <BtnConfig
             type="button"
             onClick={ this.btnConfig }
             data-testid="btn-settings"
           >
             Configurações
-          </button>
-        </form>
-      </div>
+          </BtnConfig>
+        </LoginForm>
+      </LoginDiv>
     );
   }
 }

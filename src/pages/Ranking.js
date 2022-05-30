@@ -1,6 +1,34 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import getRanking from '../helpers/localStorage';
+
+const RankingMain = styled.main`{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color:white;
+  background: #093545;
+}`;
+const RankingH1 = styled.h1`
+{    font-family: 'Lexend Deca';
+font-weight: 100;
+font-size: 50px;
+line-height: 250px;
+text-align: center;
+color: #FFFFFF;
+}`;
+const RankingText = styled.li`{
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding:10px;
+}`;
+const RankinBtn = styled.button`{
+  width: 300px;
+  height: 45px;
+  margin:25px;
+}`;
 
 class Ranking extends Component {
   constructor() {
@@ -28,36 +56,40 @@ class Ranking extends Component {
       const { ranking } = this.state;
       return (
         <main>
-          <h1 data-testid="ranking-title">Ranking</h1>
-          <ol>
-            {ranking.length > 0 && (
-              ranking.map((item, index) => (
-                <li key={ index }>
-                  <img
-                    src={ item.picture }
-                    alt={ `imagem de perfil de ${item.name}` }
-                  />
-                  <p
-                    data-testid={ `player-name-${index}` }
-                  >
-                    { item.name }
-                  </p>
-                  <p
-                    data-testid={ `player-score-${index}` }
-                  >
-                    { item.score }
-                  </p>
-                </li>
-              ))
-            )}
-          </ol>
-          <button
-            type="button"
-            onClick={ this.clickToHome }
-            data-testid="btn-go-home"
-          >
-            Inicio
-          </button>
+          <RankingMain>
+            <RankingH1 data-testid="ranking-title">Ranking</RankingH1>
+            <ol>
+              {ranking.length > 0 && (
+                ranking.map((item, index) => (
+                  <RankingText key={ index }>
+                    <img
+                      src={ item.picture }
+                      alt={ `imagem de perfil de ${item.name}` }
+                    />
+                    <p
+                      data-testid={ `player-name-${index}` }
+                    >
+                      { item.name }
+                    </p>
+                    <p
+                      data-testid={ `player-score-${index}` }
+                    >
+                      { item.score }
+                    </p>
+                  </RankingText>
+                ))
+              )}
+            </ol>
+            <footer>
+              <RankinBtn
+                type="button"
+                onClick={ this.clickToHome }
+                data-testid="btn-go-home"
+              >
+                Inicio
+              </RankinBtn>
+            </footer>
+          </RankingMain>
         </main>
       );
     }
