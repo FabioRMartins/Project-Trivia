@@ -1,30 +1,46 @@
 import React from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import HeaderGame from '../components/HeaderGame';
 import { fetchGetRequest, fetchGetQuestion, actionAddScore,
   actionAddAssertions } from '../redux/actions';
 
+const BtnNext = styled.button`{padding:10px 15px;border:none;border-radius:5px;
+  transition:all 0.2s;margin:50px }`;
+const DivBtn = styled.div`{width:100%;justify-content: center;display:flex;}`;
+const CtgQuestion = styled.p`{font-weight:400;font-size:25px;line-height:150px;
+  color:white;text-align:center;width:100%;}`;
+const Questions = styled.p`{font-weight:100;font-size:20px;line-height:50px;
+  text-align:center;width:100%;color:white;}`;
+const GameBg = styled.div`{display:flex;flex-direction:column;width:100%;
+  height: 980px;background: #093545;}`;
+const Timer = styled.div`{width:100%;justify-content:center;display:flex;color:white;
+  margin:60px}`;
+const Answer = styled.div`{width:60%%;justify-content: center;display:flex;color:white;}`;
+const BtnQt = styled.button`{width: 40%;padding:10px 15px;border:none;border-radius:5px;
+  border: 2px solid black;transition:all 0.2s;}`;
+const GroupQuestionsDiv = styled.div`{margin:100px;display:flex;flex-direction:column;
+  align-items:center;}`;
 class Game extends React.Component {
   constructor() {
     super();
     this.state = {
       questions: {},
       shuffledAnswers: [],
-      currentQuestionIndex: 0,
-      nxtButtonDisabled: true,
-      questionButtonDisabled: false,
+      currentQtI: 0,
+      off: true,
+      questionBtnOff: false,
       correctStyle: {},
       wrongStyle: {},
       nextBtn: false,
       score: 0,
       assertions: 0,
       countdown: 30,
-      stopCountdown: 0,
+      stopCount: 0,
       timer: true,
     };
-    const TIME = 1000;
-    this.timer = setInterval(this.tick.bind(this), TIME);
+    const TIME = 1000; this.timer = setInterval(this.tick.bind(this), TIME);
   }
 
   componentDidMount() { this.fetchGetQuestion(); }
@@ -32,93 +48,72 @@ class Game extends React.Component {
   componentWillUnmount() { clearInterval(this.timer); }
 
   fetchGetQuestion = async () => {
-    const { history } = this.props;
-    fetchGetRequest();
+    const { history } = this.props; fetchGetRequest();
     const getQuestion = await fetchGetQuestion();
-    const code = 3;
-    if (getQuestion.response_code === code) {
-      localStorage.removeItem('token');
-      history.push('/');
-    }
-    const questions = getQuestion.results;
-    const currentQuestionIndex = 0;
-    const currentQuestion = questions[currentQuestionIndex];
-    const NUMBER = 0.5;
-    const allAnswers = [...currentQuestion.incorrect_answers,
-      currentQuestion.correct_answer,
-    ];
-    const shuffledAnswers = allAnswers.sort(() => Math.random() - NUMBER);
+    const code = 3; if (getQuestion.response_code === code) {
+      localStorage.removeItem('token'); history.push('/');
+    } const questions = getQuestion.results; const currentQtI = 0;
+    const currentQt = questions[currentQtI]; const NUMBER = 0.5;
+    const allAnswers = [...currentQt.incorrect_answers, currentQt.correct_answer,
+    ]; const shuffledAnswers = allAnswers.sort(() => Math.random() - NUMBER);
     this.setState({ questions, shuffledAnswers });
   }
 
   checkAnswer = (e) => {
-    e.preventDefault();
-    clearInterval(this.timer);
-    const { target } = e;
-    const { questions, currentQuestionIndex, countdown } = this.state;
-    const stopCountdown = countdown;
-    const correctAnswer = questions[currentQuestionIndex].correct_answer;
-    const dificult = questions[currentQuestionIndex].difficulty;
+    e.preventDefault(); clearInterval(this.timer); const { target } = e;
+    const { questions, currentQtI, countdown } = this.state; const stopCount = countdown;
+    const correctAnswer = questions[currentQtI].correct_answer;
+    const dificult = questions[currentQtI].difficulty;
     if (target.value === correctAnswer) {
-      this.handleScore(1, dificult);
-    }
-    this.setState({ nextBtn: true,
-      nxtButtonDisabled: false,
-      questionButtonDisabled: true,
+      this.handleScore(stopCount, dificult);
+    } this.setState({ nextBtn: true,
+      off: false,
+      questionBtnOff: true,
       correctStyle: { border: '3px solid rgb(6, 240, 15' },
       wrongStyle: { border: '3px solid red' },
-      stopCountdown,
+      stopCount,
       countdown: 0,
       timer: false });
   }
 
   handleScore = () => {
-    const magicNumber10 = 10;
-    const { score, questions, currentQuestionIndex, assertions,
-      stopCountdown } = this.state;
-    const difficulty = this.handleDifficult(questions[currentQuestionIndex].difficulty);
-    this.setState({ score: score + (magicNumber10 + (stopCountdown * difficulty)),
+    const magicNumber10 = 10; const { score, questions, currentQtI, assertions,
+      stopCount } = this.state;
+    const difficulty = this.handleDifficult(questions[currentQtI].difficulty);
+    this.setState({ score: score + (magicNumber10 + (stopCount * difficulty)),
       assertions: assertions + 1 }, () => this.handleUserScore());
   }
 
   handleUserScore = () => {
     const { score, assertions } = this.state;
     const { setScore, setAssertions } = this.props;
-    setScore(score);
-    setAssertions(assertions);
+    setScore(score); setAssertions(assertions);
   }
 
   handleDifficult = (difficult) => {
     const magicNumber3 = 3;
-    if (difficult === 'easy') return 1;
-    if (difficult === 'medium') return 2;
+    if (difficult === 'easy') return 1; if (difficult === 'medium') return 2;
     if (difficult === 'hard') return magicNumber3;
   }
 
   shuffledAnswers = () => {
-    const { questions, currentQuestionIndex } = this.state;
-    const currentQuestion = questions[currentQuestionIndex];
+    const { questions, currentQtI } = this.state; const currentQt = questions[currentQtI];
     const NUMBER = 0.5;
-    const allAnswers = [
-      ...currentQuestion.incorrect_answers,
-      currentQuestion.correct_answer,
-    ];
+    const allAnswers = [...currentQt.incorrect_answers, currentQt.correct_answer];
     const shuffledAnswers = allAnswers.sort(() => Math.random() - NUMBER);
     this.setState({
       shuffledAnswers,
     });
   }
 
-  nextQuestion = (e) => {
+  nxt = (e) => {
     e.preventDefault();
-    const TIME = 1000;
-    this.timer = setInterval(this.tick.bind(this), TIME);
-    const { questions, currentQuestionIndex } = this.state;
-    const { history } = this.props;
-    if (currentQuestionIndex < questions.length - 1) {
-      this.setState({ currentQuestionIndex: currentQuestionIndex + 1,
-        nxtButtonDisabled: true,
-        questionButtonDisabled: false,
+    const TIME = 1000; this.timer = setInterval(this.tick.bind(this), TIME);
+    const { questions, currentQtI } = this.state;
+    const { history } = this.props; if (currentQtI < questions.length - 1) {
+      this.setState({ currentQtI: currentQtI + 1,
+        off: true,
+        questionBtnOff: false,
         correctStyle: {},
         wrongStyle: {},
         countdown: 30,
@@ -126,113 +121,108 @@ class Game extends React.Component {
     } else {
       const oldRank = JSON.parse(localStorage.getItem('ranking')) || [];
       const { name, score, gravatarEmail } = this.props;
-      const newRanking = [...oldRank, { name, score, gravatarEmail }];
-      localStorage.setItem('ranking', JSON.stringify(newRanking));
-      history.push('/feedback');
+      const newRank = [...oldRank, { name, score, gravatarEmail }];
+      localStorage.setItem('ranking', JSON.stringify(newRank)); history.push('/feedback');
     }
   }
 
   tick() {
-    const { countdown } = this.state;
-    if (countdown === 0) {
+    const { countdown } = this.state; if (countdown === 0) {
       this.transition();
     } else { this.setState({ countdown: countdown - 1 }); }
   }
 
   transition() {
-    clearInterval(this.timer);
-    this.setState({ nxtButtonDisabled: false,
-      questionButtonDisabled: true,
+    clearInterval(this.timer); this.setState({ off: false,
+      questionBtnOff: true,
       correctStyle: { border: '3px solid rgb(6, 240, 15' },
       wrongStyle: { border: '3px solid red' } });
   }
 
   renderQuestions = () => {
-    const { questions, currentQuestionIndex, questionButtonDisabled, correctStyle,
-      wrongStyle, shuffledAnswers } = this.state;
-    const currentQuestion = questions[currentQuestionIndex];
-    const correctAnswer = currentQuestion.correct_answer;
+    const { questions, currentQtI, questionBtnOff, correctStyle, wrongStyle,
+      shuffledAnswers } = this.state;
+    const currentQt = questions[currentQtI];
+    const correctAnswer = currentQt.correct_answer;
     return (
       <div>
-        <p data-testid="question-category">{currentQuestion.category}</p>
-        <p data-testid="question-text">{currentQuestion.question}</p>
-        <div data-testid="answer-options">
+        <CtgQuestion data-testid="question-category">{currentQt.category}</CtgQuestion>
+        <Questions data-testid="question-text">{currentQt.question}</Questions>
+        <Answer data-testid="answer-options">
           {
             shuffledAnswers.map((answer, index) => (
               (answer !== correctAnswer)
                 ? (
-                  <button
+                  <BtnQt
                     type="submit"
                     key={ index }
                     value={ answer }
                     data-testid={ `wrong-answer-${index}` }
                     onClick={ this.checkAnswer }
-                    disabled={ questionButtonDisabled }
+                    disabled={ questionBtnOff }
                     style={ wrongStyle }
                   >
                     {answer}
-                  </button>
+                  </BtnQt>
                 ) : (
-                  <button
+                  <BtnQt
                     type="submit"
                     key={ index }
                     value={ answer }
                     data-testid="correct-answer"
                     onClick={ this.checkAnswer }
-                    disabled={ questionButtonDisabled }
+                    disabled={ questionBtnOff }
                     style={ correctStyle }
                   >
                     {answer}
-                  </button>
+                  </BtnQt>
                 )
             ))
           }
-        </div>
+        </Answer>
       </div>
     );
   }
 
-  renderButton = () => {
-    const { nxtButtonDisabled } = this.state;
-    return (
-      <div>
-        <button
-          type="submit"
-          onClick={ this.nextQuestion }
-          disabled={ nxtButtonDisabled }
-          data-testid="btn-next"
-        >
-          Next
-        </button>
-      </div>
-    );
-  }
+renderButton = () => {
+  const { off } = this.state;
+  return (
+    <DivBtn>
+      <BtnNext type="submit" onClick={ this.nxt } disabled={ off } data-testid="btn-next">
+        Next
+      </BtnNext>
+    </DivBtn>
+  );
+}
 
-  render() {
-    const { questions, timer, countdown, stopCountdown, nextBtn } = this.state;
-    return (
-      <main>
-        <HeaderGame />
+render() {
+  const { questions, timer, countdown, stopCount, nextBtn } = this.state;
+  return (
+    <GameBg>
+      <HeaderGame />
+      <GroupQuestionsDiv>
         <div>
           { questions.length > 0 ? this.renderQuestions() : <p>Carregando</p> }
           { !nextBtn ? null : (
             this.renderButton())}
         </div>
-        { timer ? <span>{countdown}</span> : <span>{stopCountdown}</span> }
-      </main>
-    );
-  }
+        <Timer>
+          { timer ? <span>{countdown}</span> : <span>{stopCount}</span> }
+        </Timer>
+      </GroupQuestionsDiv>
+    </GameBg>
+  );
 }
-Game.propTypes = {
-  history: PropTypes.shape({ push: PropTypes.func.isRequired }).isRequired,
-  setScore: PropTypes.func.isRequired,
-  setAssertions: PropTypes.func.isRequired,
-  name: PropTypes.string.isRequired,
-  score: PropTypes.number.isRequired,
-  gravatarEmail: PropTypes.string.isRequired,
+}
+Game.propTypes = { history: PropTypes.shape({
+  push: PropTypes.func.isRequired }).isRequired,
+setScore: PropTypes.func.isRequired,
+setAssertions: PropTypes.func.isRequired,
+name: PropTypes.string.isRequired,
+score: PropTypes.number.isRequired,
+gravatarEmail: PropTypes.string.isRequired,
 };
-const mapStateToProps = (state) => ({
-  name: state.player.name,
+const mapStateToProps = (state) => ({ name: state.player.name,
   score: state.player.score,
   gravatarEmail: state.player.gravatarEmail,
 });

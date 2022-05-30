@@ -1,39 +1,86 @@
 import React, { Component } from 'react';
+import styled from 'styled-components';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import HeaderFeedback from '../components/HeaderFeedback';
 
+const FeedbackBg = styled.div`{display: flex; flex-direction:column;width:100%;
+  height: 980px;background: #093545;}`;
+const FeedbackH1 = styled.h1`
+{    font-family: 'Lexend Deca';
+font-weight: 100;
+font-size: 50px;
+line-height: 250px;
+text-align: center;
+color: #FFFFFF;
+}`;
+const FeedbackText = styled.p`{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  padding:10px;
+}`;
+const FeedbackAcertos = styled.div`{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin: 20px;
+  padding:10px;
+}`;
+const FeedbackMain = styled.main`{
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  color:white;
+}`;
+const FeedbackBtn = styled.button`{
+  width: 300px;
+  height: 45px;
+  margin:25px;
+}`;
 class Feedback extends Component {
   messageToShow = () => {
     const { score, assertions } = this.props;
     const THREE = 3;
     const answers = (
-      <div>
-        <p>
+      <FeedbackText>
+        <FeedbackAcertos>
           Você acertou&nbsp;
           <span data-testid="feedback-total-question">{assertions}</span>
           &nbsp;Pergunta(as)!
-          <br />
+        </FeedbackAcertos>
+        <br />
+        <FeedbackAcertos>
           Um total de&nbsp;
           <span data-testid="feedback-total-score">{score}</span>
           &nbsp;pontos!
-        </p>
-      </div>
+        </FeedbackAcertos>
+      </FeedbackText>
     );
     if (Number(assertions) < THREE) {
       return (
-        <section>
-          <h1 data-testid="feedback-text">Could be better...</h1>
-          {answers}
-        </section>
+        <div>
+          <div>
+            <FeedbackH1 data-testid="feedback-text">Could be better...</FeedbackH1>
+          </div>
+          <FeedbackText>
+            {answers}
+          </FeedbackText>
+        </div>
       );
     }
 
     return (
-      <section>
-        <h1 data-testid="feedback-text">Well Done!</h1>
-        {answers}
-      </section>
+      <div>
+        <div>
+          <FeedbackH1 data-testid="feedback-text">Well Done!</FeedbackH1>
+        </div>
+        <FeedbackText>
+          {answers}
+        </FeedbackText>
+      </div>
     );
   }
 
@@ -52,24 +99,30 @@ class Feedback extends Component {
   render() {
     const messageToShow = this.messageToShow();
     return (
-      <main>
+      <FeedbackBg>
         <HeaderFeedback />
-        {messageToShow}
-        <button
-          type="submit"
-          data-testid="btn-play-again"
-          onClick={ this.playAgain }
-        >
-          Jogar Novamente
-        </button>
-        <button
-          type="submit"
-          data-testid="btn-ranking"
-          onClick={ this.viewRanking }
-        >
-          Ver Ranking
-        </button>
-      </main>
+        <FeedbackMain>
+          <FeedbackText>
+            {messageToShow}
+          </FeedbackText>
+          <div>
+            <FeedbackBtn
+              type="submit"
+              data-testid="btn-play-again"
+              onClick={ this.playAgain }
+            >
+              Jogar Novamente
+            </FeedbackBtn>
+            <FeedbackBtn
+              type="submit"
+              data-testid="btn-ranking"
+              onClick={ this.viewRanking }
+            >
+              Ver Ranking
+            </FeedbackBtn>
+          </div>
+        </FeedbackMain>
+      </FeedbackBg>
     );
   }
 }
