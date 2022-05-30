@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import md5 from 'crypto-js/md5';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import getRanking from '../helpers/localStorage';
@@ -52,6 +53,12 @@ class Ranking extends Component {
       history.push('/');
     }
 
+    getGravatarImg = (email) => {
+      console.log(email);
+      const hash = md5(email).toString();
+      return `https://www.gravatar.com/avatar/${hash}`;
+    }
+
     render() {
       const { ranking } = this.state;
       return (
@@ -63,7 +70,7 @@ class Ranking extends Component {
                 ranking.map((item, index) => (
                   <RankingText key={ index }>
                     <img
-                      src={ item.picture }
+                      src={ this.getGravatarImg(item.gravatarEmail) }
                       alt={ `imagem de perfil de ${item.name}` }
                     />
                     <p
