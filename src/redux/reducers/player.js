@@ -18,6 +18,7 @@ function player(state = INITIAL_STATE, action) {
     return {
       ...state,
       email: action.payload,
+      gravatarEmail: action.payload,
     };
   case ADD_SCORE:
     return {
